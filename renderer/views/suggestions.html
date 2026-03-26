@@ -1,0 +1,25 @@
+<div class="view-header">
+  <h1>Meal Suggestions</h1>
+  <p>AI-powered suggestions based on your remaining macros</p>
+</div>
+
+<div class="section">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Remaining Macros</div>
+        <div id="remaining-pills" style="margin-top: 8px;"></div>
+      </div>
+      <button class="btn btn-primary" id="suggest-btn">&#x1F4A1; Suggest Meals</button>
+    </div>
+
+    <div id="suggest-loading" style="display:none;" class="loading-row">
+      <div class="spinner"></div><span>Thinking up meals for you...</span>
+    </div>
+  </div>
+</div>
+
+<div id="suggestions-results" class="section" style="display:none;">
+  <h4 style="margin-bottom: 16px;">Suggested Meals</h4>
+  <div id="suggestions-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
+</div>

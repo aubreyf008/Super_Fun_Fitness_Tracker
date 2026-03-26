@@ -1,0 +1,76 @@
+<div class="view-header">
+  <h1>Log Food</h1>
+  <p>Describe what you ate and AI will parse the macros</p>
+</div>
+
+<div class="section">
+  <div class="card">
+    <div class="input-group">
+      <label class="input-label">What did you eat?</label>
+      <textarea class="input" id="food-input" rows="3"
+        placeholder="e.g. 2 scrambled eggs with cheese and a slice of whole wheat toast"></textarea>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <button class="btn btn-primary" id="parse-btn">&#x2728; Parse with AI</button>
+      <div id="parse-loading" style="display:none;" class="loading-row">
+        <div class="spinner"></div><span>Analyzing...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI Result / Confirm -->
+<div id="confirm-box" style="display:none;" class="section">
+  <h4 style="margin-bottom: 12px;">Confirm Meal</h4>
+  <div class="confirm-box">
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
+      <div>
+        <div style="font-size: 1.1rem; font-weight: 700;" id="result-name"></div>
+        <div style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 4px;" id="result-notes"></div>
+        <div style="margin-top: 4px;" id="result-confidence"></div>
+      </div>
+      <button class="btn-icon" id="edit-toggle" title="Edit values">&#x270F;&#xFE0F;</button>
+    </div>
+
+    <div id="result-pills"></div>
+
+    <!-- Editable fields (hidden by default) -->
+    <div id="edit-fields" style="display:none; margin-top: 12px;">
+      <div class="input-row">
+        <div class="input-group">
+          <label class="input-label">Name</label>
+          <input class="input" id="edit-name" type="text">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Calories</label>
+          <input class="input" id="edit-cal" type="number" min="0">
+        </div>
+      </div>
+      <div class="input-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="input-group">
+          <label class="input-label">Protein (g)</label>
+          <input class="input" id="edit-protein" type="number" min="0" step="0.1">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Carbs (g)</label>
+          <input class="input" id="edit-carbs" type="number" min="0" step="0.1">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Fat (g)</label>
+          <input class="input" id="edit-fat" type="number" min="0" step="0.1">
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 16px;">
+      <button class="btn btn-primary" id="confirm-btn">&#x2713; Add to Log</button>
+      <button class="btn btn-ghost" id="cancel-btn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Today's log -->
+<div class="section">
+  <h4 style="margin-bottom: 12px;">Today's Log</h4>
+  <div class="card" id="log-meals-list"></div>
+</div>

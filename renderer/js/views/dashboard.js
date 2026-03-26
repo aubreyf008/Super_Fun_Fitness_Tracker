@@ -1,0 +1,93 @@
+import { state, computeTotals } from '../state.js'
+import { createRing, toast, fmtDate } from '../ui.js'
+import { navigate } from '../router.js'
+
+export async function init() {
+  const profile = state.profile
+  const meals   = await window.api.store.getDailyLog(state.todayKey)
+  state.todayMeals = meals
+
+  renderDate()
+  renderRings(profile, meals)
+  renderMealsList(meals)
+  renderStats(profile, meals)
+
+  document.getElementById('dash-log-btn').addEventListener('click', () => navigate('log-food'))
+}
+
+function renderDate() {
+  const el = document.getElementById('dash-date')
+  if (el) {
+    const d = new Date()
+    el.textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+  }
+}
+
+function renderRings(profile, meals) {
+  const totals = computeTotals(meals)
+  const container = document.getElementById('macro-rings')
+  if (!container) return
+
+  container.innerHTML = [
+    createRing({ id: 'cal',     size: 120, strokeWidth: 10, color: 'var(--accent-green)',  value: totals.calories, max: profile.dailyCalTarget || 2300, label: 'Calories',  unit: 'kcal' }),
+    createRing({ id: 'protein', size: 120, strokeWidth: 10, color: 'var(--accent-blue)',   value: totals.protein,  max: profile.proteinTarget  || 190,  label: 'Protein',   unit: 'g' }),
+    createRing({ id: 'carbs',   size: 120, strokeWidth: 10, color: 'var(--accent-orange)', value: totals.carbs,    max: profile.carbTarget     || 215,  label: 'Carbs',     unit: 'g' }),
+    createRing({ id: 'fat',     size: 120, strokeWidth: 10, color: 'var(--accent-yellow)', value: totals.fat,      max: profile.fatTarget      || 68,   label: 'Fat',       unit: 'g' })
+  ].join('')
+}
+
+function renderMealsList(meals) {
+  const el = document.getElementById('meals-list')
+  if (!el) return
+
+  if (meals.length === 0) {
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">&#x1F957;</div>
+        <p>No meals logged today. Hit "Log Food" to get started!</p>
+      </div>`
+    return
+  }
+
+  el.innerHTML = meals.map(m => `
+    <div class="meal-item" data-id="${m.id}">
+      <div class="meal-info">
+        <div class="meal-name">${escHtml(m.name || m.description)}</div>
+        <div class="meal-macros">${Math.round(m.protein)}g protein · ${Math.round(m.carbs)}g carbs · ${Math.round(m.fat)}g fat</div>
+      </div>
+      <div class="meal-cal">${Math.round(m.calories)} kcal</div>
+      <button class="btn-icon delete-meal-btn" title="Delete meal">&#x1F5D1;&#xFE0F;</button>
+    </div>
+  `).join('')
+
+  el.querySelectorAll('.delete-meal-btn').forEach((btn, i) => {
+    btn.addEventListener('click', async () => {
+      const meal = meals[i]
+      await window.api.store.deleteMeal(state.todayKey, meal.id)
+      state.todayMeals.splice(i, 1)
+      meals.splice(i, 1)
+      renderMealsList(meals)
+      renderRings(state.profile, meals)
+      renderStats(state.profile, meals)
+      toast('Meal removed', 'info')
+    })
+  })
+}
+
+function renderStats(profile, meals) {
+  const totals = computeTotals(meals)
+  const calLeft     = Math.max(0, (profile.dailyCalTarget || 2300) - totals.calories)
+  const proteinLeft = Math.max(0, (profile.proteinTarget  || 190)  - totals.protein)
+
+  const streaks = state.streaks
+  document.getElementById('stat-streak-val').textContent  = streaks.current
+  document.getElementById('stat-streak-sub').textContent  = streaks.longest > 0 ? `Best: ${streaks.longest} days` : ''
+  document.getElementById('stat-cal-val').textContent     = Math.round(calLeft)
+  document.getElementById('stat-cal-sub').textContent     = `${Math.round(totals.calories)} consumed`
+  document.getElementById('stat-protein-val').textContent = Math.round(proteinLeft)
+  document.getElementById('stat-protein-sub').textContent = `${Math.round(totals.protein)}g consumed`
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}

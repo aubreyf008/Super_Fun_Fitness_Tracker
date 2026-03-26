@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';">
+  <title>Super Fun Fit Tracker</title>
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
+</head>
+<body>
+<div id="app">
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div id="sidebar-header">
+      <div id="sidebar-logo">&#x1F4AA; FitTracker</div>
+      <div id="sidebar-tagline">Stay on target</div>
+    </div>
+
+    <div id="streak-badge">
+      <span class="flame">&#x1F525;</span>
+      <div>
+        <div class="streak-count" id="streak-count">0</div>
+        <div class="streak-label">Day streak</div>
+      </div>
+    </div>
+
+    <nav id="nav">
+      <div class="nav-section-label">Daily</div>
+      <div class="nav-item active" data-view="dashboard">
+        <span class="nav-icon">&#x1F3E0;</span> Dashboard
+      </div>
+      <div class="nav-item" data-view="log-food">
+        <span class="nav-icon">&#x1F37D;&#xFE0F;</span> Log Food
+      </div>
+      <div class="nav-item" data-view="suggestions">
+        <span class="nav-icon">&#x1F4A1;</span> Suggestions
+      </div>
+
+      <div class="nav-section-label">Progress</div>
+      <div class="nav-item" data-view="weight-tracker">
+        <span class="nav-icon">&#x1F4C8;</span> Weight
+      </div>
+      <div class="nav-item" data-view="body-fat">
+        <span class="nav-icon">&#x1F4CF;</span> Body Fat
+      </div>
+      <div class="nav-item" data-view="goal-timeline">
+        <span class="nav-icon">&#x1F3AF;</span> Goal Timeline
+      </div>
+    </nav>
+
+    <div id="sidebar-footer">v1.0.0</div>
+  </aside>
+
+  <!-- Main content -->
+  <main id="main">
+    <div id="view-slot">
+      <div class="loading-row" style="justify-content:center; padding: 80px 0;">
+        <div class="spinner"></div>
+        <span>Loading...</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- Chart.js loaded from node_modules -->
+<script src="../node_modules/chart.js/dist/chart.umd.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

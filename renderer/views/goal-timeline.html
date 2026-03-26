@@ -1,0 +1,43 @@
+<div class="view-header">
+  <h1>Goal Timeline</h1>
+  <p>Estimate when you'll hit your target body fat</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+  <!-- Current Stats -->
+  <div class="card section">
+    <div class="card-title" style="margin-bottom: 16px;">Your Stats</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" id="current-stats"></div>
+  </div>
+
+  <!-- Projected Date -->
+  <div class="card section" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px;">
+    <div class="card-title">Estimated Goal Date</div>
+    <div style="font-size: 2.4rem; font-weight: 900; color: var(--accent-green); line-height: 1.1;" id="goal-date">—</div>
+    <div style="color: var(--text-secondary); font-size: 0.85rem;" id="goal-days"></div>
+    <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;" id="goal-disclaimer"></div>
+  </div>
+</div>
+
+<!-- Deficit Slider -->
+<div class="card section">
+  <div class="card-title" style="margin-bottom: 16px;">Daily Calorie Deficit</div>
+  <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
+    <span style="color: var(--text-secondary); font-size: 0.85rem;">300 cal</span>
+    <div style="flex: 1;">
+      <input type="range" id="deficit-slider" min="100" max="800" step="50" value="500">
+    </div>
+    <span style="color: var(--text-secondary); font-size: 0.85rem;">800 cal</span>
+  </div>
+  <div style="text-align: center;">
+    <span style="font-size: 1.8rem; font-weight: 800; color: var(--accent-orange);" id="deficit-val">500</span>
+    <span style="color: var(--text-muted);"> cal/day deficit</span>
+  </div>
+  <div style="margin-top: 8px; text-align: center; color: var(--text-muted); font-size: 0.8rem;" id="deficit-context"></div>
+</div>
+
+<!-- Milestone Table -->
+<div class="card section" id="milestones-section" style="display:none;">
+  <div class="card-title" style="margin-bottom: 16px;">Milestones</div>
+  <div id="milestones-list"></div>
+</div>

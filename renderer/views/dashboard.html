@@ -1,0 +1,49 @@
+<div class="view-header">
+  <h1>Dashboard</h1>
+  <p id="dash-date" style="color: var(--text-secondary);"></p>
+</div>
+
+<!-- Macro Progress Rings -->
+<div class="section">
+  <h4>Today's Macros</h4>
+  <div style="margin-top: 16px;">
+    <div class="macro-grid" id="macro-rings"></div>
+  </div>
+</div>
+
+<!-- Today's Meals -->
+<div class="section">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+    <h4>Today's Meals</h4>
+    <button class="btn btn-secondary btn-sm" id="dash-log-btn">+ Log Food</button>
+  </div>
+  <div class="card" id="meals-list"></div>
+</div>
+
+<!-- Quick Stats Row -->
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;" class="section">
+  <div class="card" id="stat-streak">
+    <div class="card-title">Current Streak</div>
+    <div class="stat-row" style="margin-top: 8px;">
+      <span class="stat-big" id="stat-streak-val">0</span>
+      <span class="stat-unit">days &#x1F525;</span>
+    </div>
+    <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;" id="stat-streak-sub"></div>
+  </div>
+  <div class="card" id="stat-cal">
+    <div class="card-title">Calories Left</div>
+    <div class="stat-row" style="margin-top: 8px;">
+      <span class="stat-big" id="stat-cal-val" style="color: var(--accent-green);">—</span>
+      <span class="stat-unit">kcal</span>
+    </div>
+    <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;" id="stat-cal-sub"></div>
+  </div>
+  <div class="card" id="stat-protein">
+    <div class="card-title">Protein Left</div>
+    <div class="stat-row" style="margin-top: 8px;">
+      <span class="stat-big" id="stat-protein-val" style="color: var(--accent-blue);">—</span>
+      <span class="stat-unit">g</span>
+    </div>
+    <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;" id="stat-protein-sub"></div>
+  </div>
+</div>

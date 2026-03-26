@@ -1,0 +1,60 @@
+<div class="view-header">
+  <h1>Weight Tracker</h1>
+  <p>Log your daily weight and track your trend</p>
+</div>
+
+<!-- Log Weight -->
+<div class="section">
+  <div class="card">
+    <h3 style="margin-bottom: 16px;">Log Weight</h3>
+    <div class="input-row" style="align-items: flex-end;">
+      <div class="input-group" style="margin-bottom: 0;">
+        <label class="input-label">Date</label>
+        <input class="input" id="wt-date" type="date">
+      </div>
+      <div class="input-group" style="margin-bottom: 0;">
+        <label class="input-label">Weight</label>
+        <div class="input-with-unit">
+          <input class="input" id="wt-val" type="number" placeholder="180.0" min="50" max="600" step="0.1">
+          <span class="input-unit-label">lbs</span>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="wt-add-btn" style="white-space: nowrap; height: 40px;">
+        + Log Weight
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Chart -->
+<div class="section">
+  <div class="chart-wrap" style="height: 320px;">
+    <canvas id="weight-chart"></canvas>
+  </div>
+</div>
+
+<!-- Stats row -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;" class="section">
+  <div class="card" style="text-align: center; padding: 16px;">
+    <div style="font-size: 1.5rem; font-weight: 800;" id="wt-current">—</div>
+    <div class="card-title" style="margin-top: 4px;">Current</div>
+  </div>
+  <div class="card" style="text-align: center; padding: 16px;">
+    <div style="font-size: 1.5rem; font-weight: 800;" id="wt-start">—</div>
+    <div class="card-title" style="margin-top: 4px;">Starting</div>
+  </div>
+  <div class="card" style="text-align: center; padding: 16px;">
+    <div style="font-size: 1.5rem; font-weight: 800;" id="wt-change">—</div>
+    <div class="card-title" style="margin-top: 4px;">Total Change</div>
+  </div>
+  <div class="card" style="text-align: center; padding: 16px;">
+    <div style="font-size: 1.5rem; font-weight: 800;" id="wt-goal">—</div>
+    <div class="card-title" style="margin-top: 4px;">Goal Weight</div>
+  </div>
+</div>
+
+<!-- History -->
+<div class="section">
+  <h4 style="margin-bottom: 12px;">History</h4>
+  <div class="card" id="wt-history"></div>
+</div>

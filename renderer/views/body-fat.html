@@ -1,0 +1,77 @@
+<div class="view-header">
+  <h1>Body Fat Estimator</h1>
+  <p>Navy Method — measure neck and waist circumference</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+  <!-- Measurement Input -->
+  <div class="section">
+    <div class="card">
+      <h3 style="margin-bottom: 20px;">Measurements</h3>
+
+      <div class="input-group">
+        <label class="input-label">Neck Circumference</label>
+        <div class="input-with-unit">
+          <input class="input" id="bf-neck" type="number" placeholder="15.5" min="8" max="30" step="0.1">
+          <span class="input-unit-label">inches</span>
+        </div>
+        <span class="input-hint">Measure below the larynx</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Waist Circumference</label>
+        <div class="input-with-unit">
+          <input class="input" id="bf-waist" type="number" placeholder="34" min="20" max="80" step="0.1">
+          <span class="input-unit-label">inches</span>
+        </div>
+        <span class="input-hint">Measure at navel level</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Height</label>
+        <div class="input-with-unit">
+          <input class="input" id="bf-height" type="number" placeholder="69" min="48" max="96" step="0.1">
+          <span class="input-unit-label">inches</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 8px;">
+        <button class="btn btn-primary" id="bf-calc-btn">Calculate</button>
+        <button class="btn btn-secondary" id="bf-save-btn" style="display:none;">Save Measurement</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="section">
+    <div class="card" id="bf-result-card">
+      <h3 style="margin-bottom: 20px; color: var(--text-muted);">Results</h3>
+      <div id="bf-result">
+        <div class="empty-state">
+          <div class="empty-icon">&#x1F4CF;</div>
+          <p>Enter measurements and tap Calculate</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Progress Bar full width -->
+<div class="section" id="bf-progress-section" style="display:none;">
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 20px;">Progress to Goal</div>
+    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">
+      <span>30% BF</span>
+      <span id="bf-goal-label"></span>
+    </div>
+    <div class="bf-progress-track">
+      <div class="bf-progress-fill" id="bf-progress-fill" style="width: 0%"></div>
+      <div class="bf-goal-marker" id="bf-goal-marker"></div>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">
+      <span>Obese</span>
+      <span>Lean</span>
+    </div>
+    <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;" id="bf-stats"></div>
+  </div>
+</div>
