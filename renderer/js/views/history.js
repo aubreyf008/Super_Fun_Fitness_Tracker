@@ -1,4 +1,4 @@
-import { state } from '../state.js'
+import { state, localDateKey } from '../state.js'
 import { fmtDate } from '../ui.js'
 
 const ACTIVITY_ICONS = {
@@ -42,7 +42,7 @@ function renderCalendar() {
 
   const firstDay  = new Date(currentYear, currentMonth, 1).getDay()
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
-  const today = new Date().toISOString().split('T')[0]
+  const today = localDateKey()
 
   const grid = document.getElementById('cal-grid')
   grid.innerHTML = ''

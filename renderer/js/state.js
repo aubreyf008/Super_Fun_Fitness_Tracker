@@ -1,5 +1,9 @@
+export function localDateKey(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
 export const state = {
-  todayKey: new Date().toISOString().split('T')[0],
+  todayKey: localDateKey(),
   profile: null,
   todayMeals: [],
   streaks: { current: 0, longest: 0, lastLoggedDate: null }
