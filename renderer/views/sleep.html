@@ -1,0 +1,92 @@
+<div class="view-header">
+  <h1>Sleep</h1>
+  <p>Log last night's sleep — good sleep protects muscle on a cut</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+
+  <!-- Log Sleep -->
+  <div class="section">
+    <div class="card">
+      <h3 style="margin-bottom: 20px;">Log Last Night</h3>
+
+      <div class="input-row">
+        <div class="input-group">
+          <label class="input-label">Bedtime</label>
+          <input class="input" id="sleep-bedtime" type="time" value="22:30">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Wake Time</label>
+          <input class="input" id="sleep-waketime" type="time" value="06:30">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Sleep Quality</label>
+        <div style="display: flex; gap: 8px; margin-top: 4px;" id="quality-picker">
+          <button class="quality-btn btn btn-secondary" data-val="1" style="flex:1; flex-direction:column; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😴</span>
+            <span style="font-size:0.65rem; margin-top:2px;">Terrible</span>
+          </button>
+          <button class="quality-btn btn btn-secondary" data-val="2" style="flex:1; flex-direction:column; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😕</span>
+            <span style="font-size:0.65rem; margin-top:2px;">Poor</span>
+          </button>
+          <button class="quality-btn btn btn-secondary" data-val="3" style="flex:1; flex-direction:column; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😐</span>
+            <span style="font-size:0.65rem; margin-top:2px;">OK</span>
+          </button>
+          <button class="quality-btn btn btn-secondary" data-val="4" style="flex:1; flex-direction:column; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😊</span>
+            <span style="font-size:0.65rem; margin-top:2px;">Good</span>
+          </button>
+          <button class="quality-btn btn btn-secondary" data-val="5" style="flex:1; flex-direction:column; padding:10px 4px;">
+            <span style="font-size:1.3rem;">⚡</span>
+            <span style="font-size:0.65rem; margin-top:2px;">Great</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Notes (optional)</label>
+        <input class="input" id="sleep-notes" type="text" placeholder="e.g. woke up once, vivid dreams...">
+      </div>
+
+      <button class="btn btn-primary" id="sleep-save-btn" style="width:100%; margin-top:4px;">Save Sleep</button>
+    </div>
+  </div>
+
+  <!-- Today's result -->
+  <div class="section">
+    <div class="card" id="sleep-result-card">
+      <h3 style="margin-bottom: 20px; color: var(--text-muted);">Today's Entry</h3>
+      <div id="sleep-today-display">
+        <div class="empty-state">
+          <div class="empty-icon">🌙</div>
+          <p>No sleep logged yet for today</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sleep history chart -->
+<div class="section">
+  <h4 style="margin-bottom: 16px;">Sleep History (last 14 days)</h4>
+  <div class="chart-wrap" style="height: 240px;">
+    <canvas id="sleep-chart"></canvas>
+  </div>
+</div>
+
+<!-- Sleep tips -->
+<div class="section">
+  <div class="card" style="background: var(--accent-blue-dim); border-color: var(--accent-blue);">
+    <div class="card-title" style="color: var(--accent-blue); margin-bottom: 10px;">Why Sleep Matters for Your Cut</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.82rem; color:var(--text-secondary);">
+      <span>🏋️ &lt;7 hrs = higher cortisol → muscle breakdown</span>
+      <span>🔥 Poor sleep raises hunger hormones (ghrelin)</span>
+      <span>💪 Deep sleep = peak HGH release for recovery</span>
+      <span>🎯 Aim for 7–9 hrs for optimal body recomp</span>
+    </div>
+  </div>
+</div>

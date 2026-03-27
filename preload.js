@@ -16,7 +16,14 @@ contextBridge.exposeInMainWorld('api', {
     addActivity: (date, activity) => ipcRenderer.invoke('store:add-activity', { date, activity }),
     deleteActivity: (date, activityId) => ipcRenderer.invoke('store:delete-activity', { date, activityId }),
     getDaySummary: (date) => ipcRenderer.invoke('store:get-day-summary', { date }),
-    getLoggedDates: () => ipcRenderer.invoke('store:get-logged-dates')
+    getLoggedDates: () => ipcRenderer.invoke('store:get-logged-dates'),
+    getWater: (date) => ipcRenderer.invoke('store:get-water', { date }),
+    addWater: (date, oz) => ipcRenderer.invoke('store:add-water', { date, oz }),
+    resetWater: (date) => ipcRenderer.invoke('store:reset-water', { date }),
+    getSleep: (date) => ipcRenderer.invoke('store:get-sleep', { date }),
+    saveSleep: (date, entry) => ipcRenderer.invoke('store:save-sleep', { date, entry }),
+    getMood: (date) => ipcRenderer.invoke('store:get-mood', { date }),
+    saveMood: (date, entry) => ipcRenderer.invoke('store:save-mood', { date, entry })
   },
   ai: {
     parseFood: (description) => ipcRenderer.invoke('ai:parse-food', { description }),

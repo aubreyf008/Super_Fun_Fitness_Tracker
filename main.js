@@ -14,6 +14,9 @@ async function initStore() {
       settings: { anthropicApiKey: '', units: 'imperial' },
       dailyLogs: {},
       activityLogs: {},
+      waterLogs: {},
+      sleepLogs: {},
+      moodLogs: {},
       weightLog: [],
       streaks: { current: 0, longest: 0, lastLoggedDate: null }
     }
@@ -140,21 +143,59 @@ function registerStoreHandlers() {
     return { success: true }
   })
 
+  // ── Water ──────────────────────────────────────────────────────────
+  ipcMain.handle('store:get-water', (_, { date }) => {
+    return store.get(`waterLogs.${date}.oz`) || 0
+  })
+  ipcMain.handle('store:add-water', (_, { date, oz }) => {
+    const current = store.get(`waterLogs.${date}.oz`) || 0
+    store.set(`waterLogs.${date}`, { oz: current + oz })
+    return { success: true, total: current + oz }
+  })
+  ipcMain.handle('store:reset-water', (_, { date }) => {
+    store.set(`waterLogs.${date}`, { oz: 0 })
+    return { success: true }
+  })
+
+  // ── Sleep ───────────────────────────────────────────────────────────
+  ipcMain.handle('store:get-sleep', (_, { date }) => {
+    return store.get(`sleepLogs.${date}`) || null
+  })
+  ipcMain.handle('store:save-sleep', (_, { date, entry }) => {
+    store.set(`sleepLogs.${date}`, entry)
+    return { success: true }
+  })
+
+  // ── Mood ────────────────────────────────────────────────────────────
+  ipcMain.handle('store:get-mood', (_, { date }) => {
+    return store.get(`moodLogs.${date}`) || null
+  })
+  ipcMain.handle('store:save-mood', (_, { date, entry }) => {
+    store.set(`moodLogs.${date}`, entry)
+    return { success: true }
+  })
+
+  // ── Day summary (expanded) ──────────────────────────────────────────
   ipcMain.handle('store:get-day-summary', (_, { date }) => {
-    const meals      = store.get(`dailyLogs.${date}.meals`)      || []
+    const meals      = store.get(`dailyLogs.${date}.meals`)         || []
     const activities = store.get(`activityLogs.${date}.activities`) || []
     const weightLog  = store.get('weightLog') || []
     const weightEntry = weightLog.find(e => e.date === date) || null
-    return { date, meals, activities, weight: weightEntry ? weightEntry.weight : null }
+    const water      = store.get(`waterLogs.${date}.oz`)  || 0
+    const sleep      = store.get(`sleepLogs.${date}`)     || null
+    const mood       = store.get(`moodLogs.${date}`)      || null
+    return { date, meals, activities, weight: weightEntry?.weight || null, water, sleep, mood }
   })
 
   ipcMain.handle('store:get-logged-dates', () => {
     const dailyLogs    = store.get('dailyLogs')    || {}
     const activityLogs = store.get('activityLogs') || {}
+    const waterLogs    = store.get('waterLogs')    || {}
     const weightLog    = store.get('weightLog')    || []
     const dates = new Set([
       ...Object.keys(dailyLogs).filter(d => dailyLogs[d].meals?.length > 0),
       ...Object.keys(activityLogs).filter(d => activityLogs[d].activities?.length > 0),
+      ...Object.keys(waterLogs).filter(d => (waterLogs[d].oz || 0) > 0),
       ...weightLog.map(e => e.date)
     ])
     return [...dates]
@@ -175,7 +216,7 @@ function registerAIHandlers() {
 
   const FOOD_PARSE_USER = (description) =>
     `Parse the nutrition for this meal and return JSON in exactly this format (numeric values only, no units in values):
-{"name":"friendly meal name","calories":450,"protein":35,"carbs":40,"fat":12,"confidence":"high","notes":"any assumptions"}
+{"name":"friendly meal name","calories":450,"protein":35,"carbs":40,"fat":12,"fiber":6,"sodium":480,"confidence":"high","notes":"any assumptions"}
 
 Meal: ${description}`
 

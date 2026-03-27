@@ -6,6 +6,9 @@ const viewModules = {
   'body-fat':      () => import('./views/body-fat.js'),
   'goal-timeline': () => import('./views/goal-timeline.js'),
   'activity':      () => import('./views/activity.js'),
+  'water':         () => import('./views/water.js'),
+  'sleep':         () => import('./views/sleep.js'),
+  'mood':          () => import('./views/mood.js'),
   'history':       () => import('./views/history.js')
 }
 

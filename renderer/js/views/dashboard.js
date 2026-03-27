@@ -6,15 +6,18 @@ export async function init() {
   const profile    = state.profile
   const meals      = await window.api.store.getDailyLog(state.todayKey)
   const activities = await window.api.store.getActivityLog(state.todayKey)
+  const waterOz    = await window.api.store.getWater(state.todayKey)
   state.todayMeals = meals
 
   renderDate()
   renderRings(profile, meals)
   renderMealsList(meals)
+  renderHealthTargets(profile, meals, waterOz)
   renderBurnSection(meals, activities)
   renderStats(profile, meals)
 
   document.getElementById('dash-log-btn').addEventListener('click', () => navigate('log-food'))
+  document.getElementById('dash-water-card').addEventListener('click', () => navigate('water'))
 }
 
 function renderDate() {
@@ -75,6 +78,37 @@ function renderMealsList(meals) {
       toast('Meal removed', 'info')
     })
   })
+}
+
+function renderHealthTargets(profile, meals, waterOz) {
+  const fiberGoal  = profile.fiberTarget  || 35
+  const sodiumGoal = profile.sodiumTarget || 2300
+
+  const totalFiber  = meals.reduce((s, m) => s + (m.fiber  || 0), 0)
+  const totalSodium = meals.reduce((s, m) => s + (m.sodium || 0), 0)
+
+  const fiberEl   = document.getElementById('dash-fiber')
+  const sodiumEl  = document.getElementById('dash-sodium')
+  const waterEl   = document.getElementById('dash-water')
+  const fiberBar  = document.getElementById('dash-fiber-bar')
+  const sodiumBar = document.getElementById('dash-sodium-bar')
+  const waterBar  = document.getElementById('dash-water-bar')
+
+  if (!fiberEl) return
+
+  document.getElementById('dash-fiber-goal').textContent  = fiberGoal
+  document.getElementById('dash-sodium-goal').textContent = sodiumGoal
+
+  fiberEl.textContent  = Math.round(totalFiber)
+  sodiumEl.textContent = Math.round(totalSodium)
+  waterEl.textContent  = Math.round(waterOz)
+
+  const sodiumPct = Math.min(100, (totalSodium / sodiumGoal) * 100)
+  sodiumEl.style.color = sodiumPct > 90 ? 'var(--accent-red)' : sodiumPct > 70 ? 'var(--accent-orange)' : 'var(--accent-green)'
+
+  if (fiberBar)  fiberBar.style.width  = Math.min(100, (totalFiber / fiberGoal) * 100) + '%'
+  if (sodiumBar) sodiumBar.style.width = sodiumPct + '%'
+  if (waterBar)  waterBar.style.width  = Math.min(100, (waterOz / 128) * 100) + '%'
 }
 
 function renderBurnSection(meals, activities) {

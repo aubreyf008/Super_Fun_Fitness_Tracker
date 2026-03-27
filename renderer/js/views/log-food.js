@@ -54,12 +54,9 @@ function showConfirm(result, originalInput) {
   const confColors = { high: 'green', medium: 'orange', low: 'red' }
   confEl.innerHTML = `<span class="badge badge-${confColors[conf] || 'orange'}">${conf} confidence</span>`
 
-  document.getElementById('result-pills').innerHTML = macroPills({
-    calories: result.calories,
-    protein:  result.protein,
-    carbs:    result.carbs,
-    fat:      result.fat
-  })
+  document.getElementById('result-pills').innerHTML =
+    macroPills({ calories: result.calories, protein: result.protein, carbs: result.carbs, fat: result.fat }) +
+    extraPills(result.fiber, result.sodium)
 
   // populate edit fields
   document.getElementById('edit-name').value    = result.name || originalInput
@@ -67,6 +64,15 @@ function showConfirm(result, originalInput) {
   document.getElementById('edit-protein').value = result.protein
   document.getElementById('edit-carbs').value   = result.carbs
   document.getElementById('edit-fat').value     = result.fat
+  document.getElementById('edit-fiber').value   = result.fiber  || ''
+  document.getElementById('edit-sodium').value  = result.sodium || ''
+}
+
+function extraPills(fiber, sodium) {
+  let html = ''
+  if (fiber  != null) html += `<div class="macro-pill" style="border-color:var(--accent-purple);"><span class="pill-val" style="color:var(--accent-purple);">${Math.round(fiber)}g</span><span class="pill-label">fiber</span></div>`
+  if (sodium != null) html += `<div class="macro-pill" style="border-color:var(--accent-red);"><span class="pill-val" style="color:var(--accent-red);">${Math.round(sodium)}</span><span class="pill-label">sodium mg</span></div>`
+  return html
 }
 
 function hideConfirm() {
@@ -83,7 +89,6 @@ function toggleEdit() {
 async function confirmAdd() {
   if (!parsedResult) return
 
-  // use edited values if edit fields are visible
   const editVisible = document.getElementById('edit-fields').style.display !== 'none'
   const meal = editVisible ? {
     name:        document.getElementById('edit-name').value.trim() || parsedResult.name,
@@ -91,20 +96,23 @@ async function confirmAdd() {
     calories:    parseFloat(document.getElementById('edit-cal').value)     || parsedResult.calories,
     protein:     parseFloat(document.getElementById('edit-protein').value) || parsedResult.protein,
     carbs:       parseFloat(document.getElementById('edit-carbs').value)   || parsedResult.carbs,
-    fat:         parseFloat(document.getElementById('edit-fat').value)     || parsedResult.fat
+    fat:         parseFloat(document.getElementById('edit-fat').value)     || parsedResult.fat,
+    fiber:       parseFloat(document.getElementById('edit-fiber').value)   || parsedResult.fiber  || 0,
+    sodium:      parseFloat(document.getElementById('edit-sodium').value)  || parsedResult.sodium || 0
   } : {
     name:        parsedResult.name,
     description: document.getElementById('food-input').value.trim(),
     calories:    parsedResult.calories,
     protein:     parsedResult.protein,
     carbs:       parsedResult.carbs,
-    fat:         parsedResult.fat
+    fat:         parsedResult.fat,
+    fiber:       parsedResult.fiber  || 0,
+    sodium:      parsedResult.sodium || 0
   }
 
   const res = await window.api.store.addMeal(state.todayKey, meal)
   if (res.success) {
     state.todayMeals.push(res.meal)
-    // update streak badge
     const streaks = await window.api.store.getStreaks()
     state.streaks = streaks
     const badge = document.getElementById('streak-count')
@@ -134,7 +142,11 @@ async function renderTodayLog() {
     <div class="meal-item" data-id="${m.id}">
       <div class="meal-info">
         <div class="meal-name">${escHtml(m.name || m.description)}</div>
-        <div class="meal-macros">${Math.round(m.protein)}g P · ${Math.round(m.carbs)}g C · ${Math.round(m.fat)}g F</div>
+        <div class="meal-macros">
+          ${Math.round(m.protein)}g P · ${Math.round(m.carbs)}g C · ${Math.round(m.fat)}g F
+          ${m.fiber  ? `· <span style="color:var(--accent-purple)">${Math.round(m.fiber)}g fiber</span>` : ''}
+          ${m.sodium ? `· <span style="color:var(--accent-red)">${Math.round(m.sodium)}mg sodium</span>` : ''}
+        </div>
       </div>
       <div class="meal-cal">${Math.round(m.calories)} kcal</div>
       <button class="btn-icon delete-meal-btn" title="Delete" data-idx="${i}">&#x1F5D1;&#xFE0F;</button>

@@ -1,0 +1,93 @@
+<div class="view-header">
+  <h1>Daily Check-In</h1>
+  <p>Rate your energy and mood — patterns here reveal a lot about your recovery</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+
+  <!-- Log Check-In -->
+  <div class="section">
+    <div class="card">
+      <h3 style="margin-bottom: 20px;">How are you feeling today?</h3>
+
+      <!-- Energy -->
+      <div class="input-group">
+        <label class="input-label">Energy Level</label>
+        <div style="display:flex; gap:6px; margin-top:6px;" id="energy-picker">
+          <button class="rating-btn btn btn-secondary" data-type="energy" data-val="1" style="flex:1; flex-direction:column; gap:2px; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😵</span><span style="font-size:0.65rem;">Drained</span>
+          </button>
+          <button class="rating-btn btn btn-secondary" data-type="energy" data-val="2" style="flex:1; flex-direction:column; gap:2px; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😓</span><span style="font-size:0.65rem;">Low</span>
+          </button>
+          <button class="rating-btn btn btn-secondary" data-type="energy" data-val="3" style="flex:1; flex-direction:column; gap:2px; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😐</span><span style="font-size:0.65rem;">Neutral</span>
+          </button>
+          <button class="rating-btn btn btn-secondary" data-type="energy" data-val="4" style="flex:1; flex-direction:column; gap:2px; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😊</span><span style="font-size:0.65rem;">Good</span>
+          </button>
+          <button class="rating-btn btn btn-secondary" data-type="energy" data-val="5" style="flex:1; flex-direction:column; gap:2px; padding:10px 4px;">
+            <span style="font-size:1.3rem;">⚡</span><span style="font-size:0.65rem;">Charged</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mood -->
+      <div class="input-group" style="margin-top: 16px;">
+        <label class="input-label">Mood</label>
+        <div style="display:flex; gap:6px; margin-top:6px;" id="mood-picker">
+          <button class="rating-btn btn btn-secondary" data-type="mood" data-val="1" style="flex:1; flex-direction:column; gap:2px; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😤</span><span style="font-size:0.65rem;">Rough</span>
+          </button>
+          <button class="rating-btn btn btn-secondary" data-type="mood" data-val="2" style="flex:1; flex-direction:column; gap:2px; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😞</span><span style="font-size:0.65rem;">Meh</span>
+          </button>
+          <button class="rating-btn btn btn-secondary" data-type="mood" data-val="3" style="flex:1; flex-direction:column; gap:2px; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😶</span><span style="font-size:0.65rem;">Okay</span>
+          </button>
+          <button class="rating-btn btn btn-secondary" data-type="mood" data-val="4" style="flex:1; flex-direction:column; gap:2px; padding:10px 4px;">
+            <span style="font-size:1.3rem;">😄</span><span style="font-size:0.65rem;">Good</span>
+          </button>
+          <button class="rating-btn btn btn-secondary" data-type="mood" data-val="5" style="flex:1; flex-direction:column; gap:2px; padding:10px 4px;">
+            <span style="font-size:1.3rem;">🔥</span><span style="font-size:0.65rem;">Killing it</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Note -->
+      <div class="input-group" style="margin-top: 16px;">
+        <label class="input-label">Note (optional)</label>
+        <input class="input" id="mood-note" type="text" placeholder="e.g. stressed at work, felt strong in the gym...">
+      </div>
+
+      <button class="btn btn-primary" id="mood-save-btn" style="width:100%; margin-top:4px;">Save Check-In</button>
+    </div>
+  </div>
+
+  <!-- Today's entry + insight -->
+  <div style="display:flex; flex-direction:column; gap:16px;" class="section">
+    <div class="card" id="mood-today-card">
+      <h4 style="margin-bottom:12px;">Today's Entry</h4>
+      <div id="mood-today-display">
+        <div class="empty-state" style="padding:24px;">
+          <div class="empty-icon">✨</div>
+          <p>No check-in yet today</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sleep correlation hint -->
+    <div class="card" id="mood-insight-card" style="display:none;">
+      <h4 style="margin-bottom:10px;">Today's Recovery Picture</h4>
+      <div id="mood-insight-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Trend chart -->
+<div class="section">
+  <h4 style="margin-bottom:16px;">Energy &amp; Mood Trend (last 14 days)</h4>
+  <div class="chart-wrap" style="height:240px;">
+    <canvas id="mood-chart"></canvas>
+  </div>
+</div>

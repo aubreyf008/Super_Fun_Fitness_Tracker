@@ -1,0 +1,93 @@
+<div class="view-header">
+  <h1>Hydration</h1>
+  <p>Goal: 1 gallon (128 oz) per day</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start;">
+
+  <!-- Animated Bottle -->
+  <div class="card" style="text-align: center; padding: 28px 20px;">
+    <div style="position: relative; display: inline-block; margin-bottom: 16px;">
+      <!-- Bottle SVG -->
+      <svg width="110" height="200" viewBox="0 0 110 200" style="display:block; margin: 0 auto;">
+        <!-- Bottle neck -->
+        <rect x="38" y="8" width="34" height="22" rx="4" fill="none" stroke="var(--border-light)" stroke-width="2.5"/>
+        <!-- Bottle cap -->
+        <rect x="42" y="2" width="26" height="10" rx="3" fill="var(--accent-blue)" opacity="0.7"/>
+        <!-- Bottle body outline -->
+        <path d="M18 36 Q10 48 10 65 L10 178 Q10 188 20 188 L90 188 Q100 188 100 178 L100 65 Q100 48 92 36 Z"
+              fill="var(--bg-elevated)" stroke="var(--border-light)" stroke-width="2.5"/>
+        <!-- Water fill (clipped) -->
+        <clipPath id="bottle-clip">
+          <path d="M18 36 Q10 48 10 65 L10 178 Q10 188 20 188 L90 188 Q100 188 100 178 L100 65 Q100 48 92 36 Z"/>
+        </clipPath>
+        <rect id="water-fill-rect" x="10" y="188" width="90" height="0"
+              fill="var(--accent-blue)" opacity="0.55" clip-path="url(#bottle-clip)"
+              style="transition: y 0.8s ease, height 0.8s ease;"/>
+        <!-- Wave overlay -->
+        <g clip-path="url(#bottle-clip)" opacity="0.3">
+          <rect id="wave-rect" x="10" y="188" width="90" height="6" fill="white"
+                style="transition: y 0.8s ease;"/>
+        </g>
+        <!-- Measurement lines -->
+        <line x1="88" y1="100" x2="96" y2="100" stroke="var(--border-light)" stroke-width="1.5"/>
+        <line x1="88" y1="130" x2="96" y2="130" stroke="var(--border-light)" stroke-width="1.5"/>
+        <line x1="88" y1="160" x2="96" y2="160" stroke="var(--border-light)" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <!-- oz counter -->
+    <div style="font-size: 2.8rem; font-weight: 900; color: var(--accent-blue); line-height: 1;" id="water-oz-display">0</div>
+    <div style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 4px;">/ 128 oz</div>
+    <div style="font-size: 0.8rem; color: var(--text-muted);" id="water-pct-label">0% of goal</div>
+
+    <!-- Reset -->
+    <button class="btn btn-ghost btn-sm" style="margin-top: 12px;" id="water-reset-btn">Reset</button>
+  </div>
+
+  <!-- Right column -->
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+
+    <!-- Quick add buttons -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom: 16px;">Quick Add</div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;">
+        <button class="btn btn-secondary quick-add" data-oz="8">8 oz<div style="font-size:0.65rem;color:var(--text-muted);">small glass</div></button>
+        <button class="btn btn-secondary quick-add" data-oz="16">16 oz<div style="font-size:0.65rem;color:var(--text-muted);">bottle</div></button>
+        <button class="btn btn-secondary quick-add" data-oz="20">20 oz<div style="font-size:0.65rem;color:var(--text-muted);">large bottle</div></button>
+        <button class="btn btn-secondary quick-add" data-oz="32">32 oz<div style="font-size:0.65rem;color:var(--text-muted);">quart</div></button>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: flex-end;">
+        <div class="input-group" style="flex:1; margin-bottom:0;">
+          <label class="input-label">Custom Amount</label>
+          <div class="input-with-unit">
+            <input class="input" id="water-custom" type="number" placeholder="0" min="1" max="200">
+            <span class="input-unit-label">oz</span>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="water-custom-btn" style="height:40px;">Add</button>
+      </div>
+    </div>
+
+    <!-- Progress bar + milestone -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom: 12px;">Progress</div>
+      <div class="progress-bar-wrap" style="height: 12px; margin-bottom: 8px;">
+        <div class="progress-bar-fill" id="water-progress-bar" style="width:0%; background: linear-gradient(90deg, var(--accent-blue), #90cdf4);"></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+        <span>0 oz</span><span>32 oz</span><span>64 oz</span><span>96 oz</span><span>128 oz</span>
+      </div>
+      <div id="water-milestones" style="margin-top: 16px; display: flex; flex-direction: column; gap: 6px;"></div>
+    </div>
+
+    <!-- Conversion info -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom: 10px;">Quick Reference</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.8rem; color:var(--text-secondary);">
+        <span>1 gallon = 128 oz</span><span>Hydro Flask 32oz = 4 fills</span>
+        <span>Standard bottle = 16.9 oz</span><span>Coffee mug ≈ 8–12 oz</span>
+      </div>
+    </div>
+  </div>
+</div>
