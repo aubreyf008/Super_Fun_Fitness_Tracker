@@ -13,6 +13,7 @@ async function initStore() {
       userProfile: null,
       settings: { anthropicApiKey: '', units: 'imperial' },
       dailyLogs: {},
+      activityLogs: {},
       weightLog: [],
       streaks: { current: 0, longest: 0, lastLoggedDate: null }
     }
@@ -118,6 +119,33 @@ function registerStoreHandlers() {
 
   ipcMain.handle('store:get-streaks', () => store.get('streaks'))
 
+  ipcMain.handle('store:get-activity-log', (_, { date }) => {
+    const logs = store.get('activityLogs')
+    return logs[date] ? logs[date].activities : []
+  })
+
+  ipcMain.handle('store:add-activity', (_, { date, activity }) => {
+    const logs = store.get('activityLogs')
+    if (!logs[date]) logs[date] = { activities: [] }
+    const newActivity = {
+      ...activity,
+      id: require('crypto').randomUUID(),
+      loggedAt: new Date().toISOString()
+    }
+    logs[date].activities.push(newActivity)
+    store.set('activityLogs', logs)
+    return { success: true, activity: newActivity }
+  })
+
+  ipcMain.handle('store:delete-activity', (_, { date, activityId }) => {
+    const logs = store.get('activityLogs')
+    if (logs[date]) {
+      logs[date].activities = logs[date].activities.filter(a => a.id !== activityId)
+      store.set('activityLogs', logs)
+    }
+    return { success: true }
+  })
+
   ipcMain.handle('app:get-initial-state', () => {
     const profile = store.get('userProfile')
     return {
@@ -196,6 +224,45 @@ Keep suggestions practical and high-protein. User is cutting to ~12% body fat.`
       const text = msg.content[0].text.trim()
       const cleaned = text.replace(/^```json?\n?/, '').replace(/\n?```$/, '')
       return JSON.parse(cleaned)
+    } catch (err) {
+      return { error: err.message }
+    }
+  })
+
+  ipcMain.handle('ai:parse-activity', async (_, { description }) => {
+    const apiKey = store.get('settings.anthropicApiKey')
+    if (!apiKey) return { error: 'No API key configured' }
+
+    const ACTIVITY_SYSTEM = `You are a fitness activity parser. When given a workout description, return ONLY valid JSON with no explanation, markdown, or code blocks. Valid activity types: running, walking, cycling, swimming, hiit, strength, elliptical, other.`
+
+    const ACTIVITY_USER = (desc) =>
+      `Parse this workout and return JSON in exactly this format (numeric values only):
+{"name":"friendly activity name","type":"running","duration":45,"durationUnit":"min","watchCalories":420,"notes":"any assumptions"}
+
+If watch calories are not mentioned, set watchCalories to null.
+Activity: ${desc}`
+
+    try {
+      const { default: Anthropic } = await import('@anthropic-ai/sdk')
+      const client = new Anthropic({ apiKey })
+
+      const tryParse = async (userContent) => {
+        const msg = await client.messages.create({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 200,
+          system: ACTIVITY_SYSTEM,
+          messages: [{ role: 'user', content: userContent }]
+        })
+        const text = msg.content[0].text.trim()
+        const cleaned = text.replace(/^```json?\n?/, '').replace(/\n?```$/, '')
+        return JSON.parse(cleaned)
+      }
+
+      try {
+        return await tryParse(ACTIVITY_USER(description))
+      } catch {
+        return await tryParse(ACTIVITY_USER(description) + '\n\nIMPORTANT: Return raw JSON only, no markdown.')
+      }
     } catch (err) {
       return { error: err.message }
     }

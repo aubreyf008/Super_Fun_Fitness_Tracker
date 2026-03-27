@@ -1,15 +1,17 @@
 import { state, computeTotals } from '../state.js'
-import { createRing, toast, fmtDate } from '../ui.js'
+import { createRing, toast } from '../ui.js'
 import { navigate } from '../router.js'
 
 export async function init() {
-  const profile = state.profile
-  const meals   = await window.api.store.getDailyLog(state.todayKey)
+  const profile    = state.profile
+  const meals      = await window.api.store.getDailyLog(state.todayKey)
+  const activities = await window.api.store.getActivityLog(state.todayKey)
   state.todayMeals = meals
 
   renderDate()
   renderRings(profile, meals)
   renderMealsList(meals)
+  renderBurnSection(meals, activities)
   renderStats(profile, meals)
 
   document.getElementById('dash-log-btn').addEventListener('click', () => navigate('log-food'))
@@ -68,14 +70,57 @@ function renderMealsList(meals) {
       meals.splice(i, 1)
       renderMealsList(meals)
       renderRings(state.profile, meals)
+      renderBurnSection(meals, await window.api.store.getActivityLog(state.todayKey))
       renderStats(state.profile, meals)
       toast('Meal removed', 'info')
     })
   })
 }
 
+function renderBurnSection(meals, activities) {
+  const totals  = computeTotals(meals)
+  const eaten   = totals.calories
+  const burned  = activities.reduce((s, a) => s + (a.adjustedCalories || 0), 0)
+  const net     = Math.round(eaten - burned)
+  const target  = state.profile?.dailyCalTarget || 2300
+
+  // deficit = how far below target the net intake is (positive = deficit, negative = surplus)
+  const deficit = target - net
+
+  const eatenEl   = document.getElementById('dash-eaten')
+  const burnedEl  = document.getElementById('dash-burned')
+  const netEl     = document.getElementById('dash-net')
+  const deficitEl = document.getElementById('dash-deficit')
+  const defSubEl  = document.getElementById('dash-deficit-sub')
+  const warnEl    = document.getElementById('dash-deficit-warning')
+
+  if (!eatenEl) return
+
+  eatenEl.textContent  = Math.round(eaten)
+  burnedEl.textContent = Math.round(burned)
+
+  // net color: green if under target, red if over
+  netEl.textContent  = net
+  netEl.style.color  = net <= target ? 'var(--accent-green)' : 'var(--accent-red)'
+
+  if (burned > 0) {
+    deficitEl.textContent   = Math.abs(deficit)
+    deficitEl.style.color   = deficit > 0 ? 'var(--accent-green)' : 'var(--accent-red)'
+    defSubEl.textContent    = deficit > 0 ? 'below target ✓' : 'above target'
+    defSubEl.style.color    = deficit > 0 ? 'var(--accent-green)' : 'var(--accent-red)'
+  } else {
+    deficitEl.textContent  = '—'
+    deficitEl.style.color  = 'var(--text-muted)'
+    defSubEl.textContent   = 'Log activity to see'
+    defSubEl.style.color   = 'var(--text-muted)'
+  }
+
+  // aggressive deficit warning
+  if (warnEl) warnEl.style.display = (burned > 0 && net < 1500) ? 'block' : 'none'
+}
+
 function renderStats(profile, meals) {
-  const totals = computeTotals(meals)
+  const totals      = computeTotals(meals)
   const calLeft     = Math.max(0, (profile.dailyCalTarget || 2300) - totals.calories)
   const proteinLeft = Math.max(0, (profile.proteinTarget  || 190)  - totals.protein)
 

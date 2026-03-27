@@ -20,6 +20,47 @@
   <div class="card" id="meals-list"></div>
 </div>
 
+<!-- Calorie Burn & Net Intake -->
+<div class="section" id="burn-section">
+  <h4 style="margin-bottom: 16px;">Calories In vs. Out</h4>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+    <div class="card" style="text-align: center; padding: 16px;">
+      <div class="card-title">Eaten</div>
+      <div class="stat-row" style="margin-top: 8px; justify-content: center;">
+        <span class="stat-big" id="dash-eaten" style="color: var(--accent-green);">0</span>
+        <span class="stat-unit">kcal</span>
+      </div>
+    </div>
+    <div class="card" style="text-align: center; padding: 16px;">
+      <div class="card-title">Burned</div>
+      <div class="stat-row" style="margin-top: 8px; justify-content: center;">
+        <span class="stat-big" id="dash-burned" style="color: var(--accent-orange);">0</span>
+        <span class="stat-unit">kcal</span>
+      </div>
+      <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Watch-adjusted</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 16px;">
+      <div class="card-title">Net Intake</div>
+      <div class="stat-row" style="margin-top: 8px; justify-content: center;">
+        <span class="stat-big" id="dash-net">0</span>
+        <span class="stat-unit">kcal</span>
+      </div>
+      <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Eaten − Burned</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 16px;" id="dash-deficit-card">
+      <div class="card-title">Today's Deficit</div>
+      <div class="stat-row" style="margin-top: 8px; justify-content: center;">
+        <span class="stat-big" id="dash-deficit">—</span>
+        <span class="stat-unit">kcal</span>
+      </div>
+      <div style="font-size: 0.7rem; margin-top: 2px;" id="dash-deficit-sub"></div>
+    </div>
+  </div>
+  <div id="dash-deficit-warning" style="display:none; margin-top: 12px; padding: 12px 16px; background: var(--accent-orange-dim); border: 1px solid var(--accent-orange); border-radius: var(--radius); font-size: 0.85rem; color: var(--accent-orange);">
+    ⚠️ Net intake below 1,500 kcal — deficit may be too aggressive. Consider eating more to protect muscle.
+  </div>
+</div>
+
 <!-- Quick Stats Row -->
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;" class="section">
   <div class="card" id="stat-streak">

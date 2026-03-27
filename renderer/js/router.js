@@ -4,7 +4,8 @@ const viewModules = {
   'suggestions':   () => import('./views/suggestions.js'),
   'weight-tracker':() => import('./views/weight-tracker.js'),
   'body-fat':      () => import('./views/body-fat.js'),
-  'goal-timeline': () => import('./views/goal-timeline.js')
+  'goal-timeline': () => import('./views/goal-timeline.js'),
+  'activity':      () => import('./views/activity.js')
 }
 
 let currentView = null

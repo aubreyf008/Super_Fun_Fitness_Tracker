@@ -1,0 +1,122 @@
+<div class="view-header">
+  <h1>Activity</h1>
+  <p>Log your workouts — Apple Watch calories are automatically adjusted for accuracy</p>
+</div>
+
+<!-- AI Input -->
+<div class="section">
+  <div class="card">
+    <div class="input-group">
+      <label class="input-label">Describe your workout</label>
+      <textarea class="input" id="activity-input" rows="2"
+        placeholder="e.g. 45 min run outside, Apple Watch said 420 cal"></textarea>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <button class="btn btn-primary" id="parse-activity-btn">&#x2728; Parse with AI</button>
+      <div id="activity-parse-loading" style="display:none;" class="loading-row">
+        <div class="spinner"></div><span>Analyzing workout...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Box -->
+<div id="activity-confirm-box" style="display:none;" class="section">
+  <h4 style="margin-bottom: 12px;">Confirm Activity</h4>
+  <div class="confirm-box">
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 16px;">
+      <div>
+        <div style="font-size: 1.1rem; font-weight: 700;" id="activity-result-name"></div>
+        <div style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 4px;" id="activity-result-notes"></div>
+      </div>
+      <button class="btn-icon" id="activity-edit-toggle" title="Edit values">&#x270F;&#xFE0F;</button>
+    </div>
+
+    <!-- Summary pills -->
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;" id="activity-summary-pills"></div>
+
+    <!-- Correction factor info -->
+    <div id="correction-info" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px;">APPLE WATCH CORRECTION</div>
+          <div style="font-size: 0.85rem;">
+            <span id="correction-watch-cal" style="color: var(--text-muted); text-decoration: line-through;"></span>
+            <span style="color: var(--text-secondary);"> → </span>
+            <span id="correction-adj-cal" style="font-weight: 700; color: var(--accent-green);"></span>
+            <span style="color: var(--text-muted);"> adjusted</span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <div id="correction-type-badge"></div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;" id="correction-factor-label"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editable fields -->
+    <div id="activity-edit-fields" style="display:none; margin-bottom: 16px;">
+      <div class="input-row">
+        <div class="input-group">
+          <label class="input-label">Activity Name</label>
+          <input class="input" id="edit-activity-name" type="text">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Type</label>
+          <select class="input" id="edit-activity-type">
+            <option value="running">Running</option>
+            <option value="walking">Walking</option>
+            <option value="cycling">Cycling</option>
+            <option value="swimming">Swimming</option>
+            <option value="hiit">HIIT / Circuits</option>
+            <option value="strength">Strength Training</option>
+            <option value="elliptical">Elliptical</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="input-group">
+          <label class="input-label">Duration (min)</label>
+          <input class="input" id="edit-activity-duration" type="number" min="1">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Watch Calories</label>
+          <input class="input" id="edit-activity-watch-cal" type="number" min="0">
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <button class="btn btn-primary" id="activity-confirm-btn">&#x2713; Log Activity</button>
+      <button class="btn btn-ghost" id="activity-cancel-btn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Today's Burn Summary -->
+<div class="section">
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;" id="burn-stats">
+    <div class="card" style="text-align: center; padding: 20px;">
+      <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-secondary); margin-bottom: 8px;">Watch Total</div>
+      <div style="font-size: 2rem; font-weight: 900; color: var(--text-muted);" id="stat-watch-total">0</div>
+      <div style="font-size: 0.75rem; color: var(--text-muted);">kcal reported</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 20px;">
+      <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-secondary); margin-bottom: 8px;">Adjusted Burn</div>
+      <div style="font-size: 2rem; font-weight: 900; color: var(--accent-orange);" id="stat-adj-total">0</div>
+      <div style="font-size: 0.75rem; color: var(--text-muted);">kcal actual</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 20px;">
+      <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-secondary); margin-bottom: 8px;">Saved From Overcount</div>
+      <div style="font-size: 2rem; font-weight: 900; color: var(--accent-blue);" id="stat-saved">0</div>
+      <div style="font-size: 0.75rem; color: var(--text-muted);">kcal corrected</div>
+    </div>
+  </div>
+</div>
+
+<!-- Activity List -->
+<div class="section">
+  <h4 style="margin-bottom: 12px;">Today's Activities</h4>
+  <div class="card" id="activity-list"></div>
+</div>
