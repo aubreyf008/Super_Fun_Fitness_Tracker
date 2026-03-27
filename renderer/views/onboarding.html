@@ -14,7 +14,7 @@
   <!-- Step 0: Personal Info -->
   <div class="step-panel active" id="step-0">
     <h2 style="margin-bottom: 6px;">About you</h2>
-    <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.875rem;">Your current stats help calibrate everything.</p>
+    <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.875rem;">Your current stats calibrate your targets automatically.</p>
 
     <div class="input-group">
       <label class="input-label">Name</label>
@@ -38,25 +38,22 @@
       </div>
     </div>
 
-    <div class="input-group">
-      <label class="input-label">Current Body Fat %</label>
-      <div class="input-with-unit">
-        <input class="input" id="onb-bodyfat" type="number" placeholder="18" min="3" max="60" step="0.1">
-        <span class="input-unit-label">%</span>
+    <div class="input-row">
+      <div class="input-group">
+        <label class="input-label">Age</label>
+        <div class="input-with-unit">
+          <input class="input" id="onb-age" type="number" placeholder="28" min="16" max="80">
+          <span class="input-unit-label">yrs</span>
+        </div>
       </div>
-      <span class="input-hint">Estimate is fine — you can update this later with measurements</span>
+      <div class="input-group">
+        <label class="input-label">Current Body Fat %</label>
+        <div class="input-with-unit">
+          <input class="input" id="onb-bodyfat" type="number" placeholder="18" min="3" max="60" step="0.1">
+          <span class="input-unit-label">%</span>
+        </div>
+      </div>
     </div>
-
-    <div class="step-actions">
-      <span></span>
-      <button class="btn btn-primary" id="step0-next">Next &#x2192;</button>
-    </div>
-  </div>
-
-  <!-- Step 1: Goals & Targets -->
-  <div class="step-panel" id="step-1">
-    <h2 style="margin-bottom: 6px;">Your targets</h2>
-    <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.875rem;">Daily macro targets and body fat goal.</p>
 
     <div class="input-group">
       <label class="input-label">Goal Body Fat %</label>
@@ -66,38 +63,95 @@
       </div>
     </div>
 
-    <div class="input-row">
-      <div class="input-group">
-        <label class="input-label">Daily Calories</label>
-        <div class="input-with-unit">
-          <input class="input" id="onb-cal" type="number" placeholder="2300" min="1000" max="5000">
-          <span class="input-unit-label">kcal</span>
+    <div class="step-actions">
+      <span></span>
+      <button class="btn btn-primary" id="step0-next">Next &#x2192;</button>
+    </div>
+  </div>
+
+  <!-- Step 1: Goal Setup -->
+  <div class="step-panel" id="step-1">
+    <h2 style="margin-bottom: 6px;">Your goal</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.875rem;">The app calculates your calorie and macro targets automatically.</p>
+
+    <!-- Goal Type -->
+    <div style="margin-bottom: 20px;">
+      <div class="input-label" style="margin-bottom: 10px;">What's your primary goal?</div>
+      <div class="goal-type-grid" id="onb-goal-grid">
+        <div class="goal-card selected" data-goal="cut">
+          <div class="goal-card-icon">&#x1F525;</div>
+          <div class="goal-card-name">Cut</div>
+          <div class="goal-card-desc">Lose fat, preserve muscle</div>
         </div>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Protein</label>
-        <div class="input-with-unit">
-          <input class="input" id="onb-protein" type="number" placeholder="190" min="50" max="400">
-          <span class="input-unit-label">g</span>
+        <div class="goal-card" data-goal="bulk">
+          <div class="goal-card-icon">&#x1F4AA;</div>
+          <div class="goal-card-name">Bulk</div>
+          <div class="goal-card-desc">Build muscle, controlled surplus</div>
+        </div>
+        <div class="goal-card" data-goal="maintain">
+          <div class="goal-card-icon">&#x2696;&#xFE0F;</div>
+          <div class="goal-card-name">Maintain</div>
+          <div class="goal-card-desc">Hold current weight and body comp</div>
+        </div>
+        <div class="goal-card" data-goal="recomp">
+          <div class="goal-card-icon">&#x1F504;</div>
+          <div class="goal-card-name">Recomp</div>
+          <div class="goal-card-desc">Lose fat and gain muscle simultaneously</div>
         </div>
       </div>
     </div>
 
-    <div class="input-row">
-      <div class="input-group">
-        <label class="input-label">Carbs</label>
-        <div class="input-with-unit">
-          <input class="input" id="onb-carbs" type="number" placeholder="215" min="0" max="600">
-          <span class="input-unit-label">g</span>
+    <!-- Aggressiveness -->
+    <div id="onb-aggr-wrap" style="margin-bottom: 20px;">
+      <div class="input-label" style="margin-bottom: 10px;">How aggressive?</div>
+      <div class="aggr-grid" id="onb-aggr-grid">
+        <div class="aggr-card" data-aggr="slow">
+          <div style="font-weight: 700;">Slow</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;" id="onb-aggr-slow-sub"></div>
+        </div>
+        <div class="aggr-card selected" data-aggr="moderate">
+          <div style="font-weight: 700;">Moderate</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;" id="onb-aggr-mod-sub"></div>
+        </div>
+        <div class="aggr-card" data-aggr="aggressive">
+          <div style="font-weight: 700;">Aggressive</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;" id="onb-aggr-agg-sub"></div>
         </div>
       </div>
-      <div class="input-group">
-        <label class="input-label">Fat</label>
-        <div class="input-with-unit">
-          <input class="input" id="onb-fat" type="number" placeholder="68" min="0" max="200">
-          <span class="input-unit-label">g</span>
+    </div>
+
+    <!-- Activity Level -->
+    <div style="margin-bottom: 20px;">
+      <div class="input-label" style="margin-bottom: 10px;">Activity level</div>
+      <div class="activity-select-grid" id="onb-activity-grid">
+        <div class="activity-card" data-activity="sedentary">
+          <div style="font-weight: 600; font-size: 0.85rem;">Sedentary</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">Desk job, little exercise</div>
+        </div>
+        <div class="activity-card" data-activity="light">
+          <div style="font-weight: 600; font-size: 0.85rem;">Light</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">1-3 days/week</div>
+        </div>
+        <div class="activity-card selected" data-activity="moderate">
+          <div style="font-weight: 600; font-size: 0.85rem;">Moderate</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">3-5 days/week</div>
+        </div>
+        <div class="activity-card" data-activity="active">
+          <div style="font-weight: 600; font-size: 0.85rem;">Active</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">6-7 days/week</div>
+        </div>
+        <div class="activity-card" data-activity="very_active">
+          <div style="font-weight: 600; font-size: 0.85rem;">Very Active</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">2x/day or physical job</div>
         </div>
       </div>
+    </div>
+
+    <!-- Computed Targets Preview -->
+    <div style="background: var(--bg-secondary); border-radius: 10px; padding: 14px; margin-bottom: 20px;">
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Your calculated daily targets</div>
+      <div id="onb-targets-preview" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center;"></div>
+      <div id="onb-tdee-info" style="margin-top: 8px; font-size: 0.72rem; color: var(--text-muted); text-align: center;"></div>
     </div>
 
     <div class="step-actions">

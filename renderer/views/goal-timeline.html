@@ -1,43 +1,102 @@
 <div class="view-header">
-  <h1>Goal Timeline</h1>
-  <p>Estimate when you'll hit your target body fat</p>
+  <h1>Goal Command Center</h1>
+  <p>Your active goal drives all calorie and macro targets</p>
 </div>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
-  <!-- Current Stats -->
-  <div class="card section">
-    <div class="card-title" style="margin-bottom: 16px;">Your Stats</div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" id="current-stats"></div>
-  </div>
-
-  <!-- Projected Date -->
-  <div class="card section" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px;">
-    <div class="card-title">Estimated Goal Date</div>
-    <div style="font-size: 2.4rem; font-weight: 900; color: var(--accent-green); line-height: 1.1;" id="goal-date">—</div>
-    <div style="color: var(--text-secondary); font-size: 0.85rem;" id="goal-days"></div>
-    <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px;" id="goal-disclaimer"></div>
-  </div>
-</div>
-
-<!-- Deficit Slider -->
+<!-- Active Goal Type -->
 <div class="card section">
-  <div class="card-title" style="margin-bottom: 16px;">Daily Calorie Deficit</div>
-  <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
-    <span style="color: var(--text-secondary); font-size: 0.85rem;">300 cal</span>
-    <div style="flex: 1;">
-      <input type="range" id="deficit-slider" min="100" max="800" step="50" value="500">
+  <div class="card-title" style="margin-bottom: 14px;">Goal Type</div>
+  <div class="goal-type-grid" id="gt-goal-grid">
+    <div class="goal-card" data-goal="cut">
+      <div class="goal-card-icon">&#x1F525;</div>
+      <div class="goal-card-name">Cut</div>
+      <div class="goal-card-desc">Lose fat, preserve muscle</div>
     </div>
-    <span style="color: var(--text-secondary); font-size: 0.85rem;">800 cal</span>
+    <div class="goal-card" data-goal="bulk">
+      <div class="goal-card-icon">&#x1F4AA;</div>
+      <div class="goal-card-name">Bulk</div>
+      <div class="goal-card-desc">Build muscle, controlled surplus</div>
+    </div>
+    <div class="goal-card" data-goal="maintain">
+      <div class="goal-card-icon">&#x2696;&#xFE0F;</div>
+      <div class="goal-card-name">Maintain</div>
+      <div class="goal-card-desc">Hold current weight and body comp</div>
+    </div>
+    <div class="goal-card" data-goal="recomp">
+      <div class="goal-card-icon">&#x1F504;</div>
+      <div class="goal-card-name">Recomp</div>
+      <div class="goal-card-desc">Lose fat and gain muscle simultaneously</div>
+    </div>
   </div>
-  <div style="text-align: center;">
-    <span style="font-size: 1.8rem; font-weight: 800; color: var(--accent-orange);" id="deficit-val">500</span>
-    <span style="color: var(--text-muted);"> cal/day deficit</span>
-  </div>
-  <div style="margin-top: 8px; text-align: center; color: var(--text-muted); font-size: 0.8rem;" id="deficit-context"></div>
 </div>
 
-<!-- Milestone Table -->
+<!-- Aggressiveness -->
+<div class="card section" id="gt-aggr-section">
+  <div class="card-title" style="margin-bottom: 12px;">Aggressiveness</div>
+  <div class="aggr-grid" id="gt-aggr-grid">
+    <div class="aggr-card" data-aggr="slow">
+      <div style="font-weight: 700;">Slow</div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;" id="gt-aggr-slow-sub"></div>
+    </div>
+    <div class="aggr-card" data-aggr="moderate">
+      <div style="font-weight: 700;">Moderate</div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;" id="gt-aggr-mod-sub"></div>
+    </div>
+    <div class="aggr-card" data-aggr="aggressive">
+      <div style="font-weight: 700;">Aggressive</div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;" id="gt-aggr-agg-sub"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Activity Level -->
+<div class="card section">
+  <div class="card-title" style="margin-bottom: 12px;">Activity Level</div>
+  <div class="activity-select-grid" id="gt-activity-grid">
+    <div class="activity-card" data-activity="sedentary">
+      <div style="font-weight: 600; font-size: 0.85rem;">Sedentary</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">Desk job, little exercise</div>
+    </div>
+    <div class="activity-card" data-activity="light">
+      <div style="font-weight: 600; font-size: 0.85rem;">Light</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">1-3 days/week</div>
+    </div>
+    <div class="activity-card" data-activity="moderate">
+      <div style="font-weight: 600; font-size: 0.85rem;">Moderate</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">3-5 days/week</div>
+    </div>
+    <div class="activity-card" data-activity="active">
+      <div style="font-weight: 600; font-size: 0.85rem;">Active</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">6-7 days/week</div>
+    </div>
+    <div class="activity-card" data-activity="very_active">
+      <div style="font-weight: 600; font-size: 0.85rem;">Very Active</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">2x/day or physical job</div>
+    </div>
+  </div>
+</div>
+
+<!-- Computed Targets Preview -->
+<div class="card section">
+  <div class="card-title" style="margin-bottom: 14px;">Daily Targets</div>
+  <div id="gt-targets-display" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; text-align: center; margin-bottom: 10px;"></div>
+  <div id="gt-tdee-info" style="font-size: 0.78rem; color: var(--text-muted); text-align: center;"></div>
+</div>
+
+<!-- Save Button -->
+<div id="gt-save-wrap" style="display: none; margin-bottom: 24px;">
+  <button class="btn btn-primary" id="gt-save-btn" style="width: 100%;">Save Goal Changes</button>
+</div>
+
+<!-- Progress Stats -->
+<div class="card section" id="gt-progress-section">
+  <div class="card-title" style="margin-bottom: 14px;">Goal Progress</div>
+  <div id="gt-progress-stats" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div>
+  <div id="gt-completion" style="margin-top: 16px; text-align: center;"></div>
+</div>
+
+<!-- Milestones -->
 <div class="card section" id="milestones-section" style="display:none;">
-  <div class="card-title" style="margin-bottom: 16px;">Milestones</div>
+  <div class="card-title" style="margin-bottom: 14px;">Milestones</div>
   <div id="milestones-list"></div>
 </div>

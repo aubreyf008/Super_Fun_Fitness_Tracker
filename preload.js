@@ -23,7 +23,8 @@ contextBridge.exposeInMainWorld('api', {
     getSleep: (date) => ipcRenderer.invoke('store:get-sleep', { date }),
     saveSleep: (date, entry) => ipcRenderer.invoke('store:save-sleep', { date, entry }),
     getMood: (date) => ipcRenderer.invoke('store:get-mood', { date }),
-    saveMood: (date, entry) => ipcRenderer.invoke('store:save-mood', { date, entry })
+    saveMood: (date, entry) => ipcRenderer.invoke('store:save-mood', { date, entry }),
+    getCalorieHistory: (startDate, endDate) => ipcRenderer.invoke('store:get-calorie-history', { startDate, endDate })
   },
   ai: {
     parseFood: (description) => ipcRenderer.invoke('ai:parse-food', { description }),

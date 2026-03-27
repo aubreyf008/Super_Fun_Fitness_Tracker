@@ -209,6 +209,18 @@ function registerStoreHandlers() {
       streaks: store.get('streaks')
     }
   })
+
+  ipcMain.handle('store:get-calorie-history', (_, { startDate, endDate }) => {
+    const dailyLogs = store.get('dailyLogs') || {}
+    const result = []
+    for (const [date, log] of Object.entries(dailyLogs)) {
+      if (date >= startDate && date <= endDate && log.meals?.length > 0) {
+        const calories = log.meals.reduce((s, m) => s + (m.calories || 0), 0)
+        result.push({ date, calories })
+      }
+    }
+    return result.sort((a, b) => a.date.localeCompare(b.date))
+  })
 }
 
 function registerAIHandlers() {
