@@ -1,0 +1,66 @@
+<div class="view-header">
+  <h1>History</h1>
+  <p>Tap any day to see your full stats for that date</p>
+</div>
+
+<!-- Calendar -->
+<div class="section">
+  <div class="card">
+    <!-- Month nav -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+      <button class="btn btn-ghost btn-sm" id="cal-prev">&#x2190;</button>
+      <div style="font-size: 1.1rem; font-weight: 700;" id="cal-month-label"></div>
+      <button class="btn btn-ghost btn-sm" id="cal-next">&#x2192;</button>
+    </div>
+
+    <!-- Day-of-week headers -->
+    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 8px;">
+      <div style="text-align:center; font-size:0.7rem; font-weight:700; color:var(--text-muted); padding: 4px;">SUN</div>
+      <div style="text-align:center; font-size:0.7rem; font-weight:700; color:var(--text-muted); padding: 4px;">MON</div>
+      <div style="text-align:center; font-size:0.7rem; font-weight:700; color:var(--text-muted); padding: 4px;">TUE</div>
+      <div style="text-align:center; font-size:0.7rem; font-weight:700; color:var(--text-muted); padding: 4px;">WED</div>
+      <div style="text-align:center; font-size:0.7rem; font-weight:700; color:var(--text-muted); padding: 4px;">THU</div>
+      <div style="text-align:center; font-size:0.7rem; font-weight:700; color:var(--text-muted); padding: 4px;">FRI</div>
+      <div style="text-align:center; font-size:0.7rem; font-weight:700; color:var(--text-muted); padding: 4px;">SAT</div>
+    </div>
+
+    <!-- Calendar grid -->
+    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;" id="cal-grid"></div>
+
+    <!-- Legend -->
+    <div style="display: flex; gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-secondary);">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--accent-green);"></div> Food logged
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-secondary);">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--accent-orange);"></div> Activity logged
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-secondary);">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--accent-blue);"></div> Weight logged
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Day Detail Panel -->
+<div id="day-detail" style="display:none;" class="section">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+    <h2 id="detail-date-heading"></h2>
+    <button class="btn btn-ghost btn-sm" id="detail-close">&#x2715; Close</button>
+  </div>
+
+  <!-- Summary stat cards -->
+  <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;" id="detail-stats"></div>
+
+  <!-- Meals -->
+  <div class="section">
+    <h4 style="margin-bottom:12px;">&#x1F37D;&#xFE0F; Meals</h4>
+    <div class="card" id="detail-meals"></div>
+  </div>
+
+  <!-- Activities -->
+  <div class="section">
+    <h4 style="margin-bottom:12px;">&#x1F3C3; Activities</h4>
+    <div class="card" id="detail-activities"></div>
+  </div>
+</div>

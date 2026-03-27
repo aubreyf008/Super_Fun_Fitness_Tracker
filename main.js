@@ -64,15 +64,13 @@ function registerStoreHandlers() {
   })
 
   ipcMain.handle('store:add-meal', (_, { date, meal }) => {
-    const logs = store.get('dailyLogs')
-    if (!logs[date]) logs[date] = { meals: [] }
+    const existing = store.get(`dailyLogs.${date}.meals`) || []
     const newMeal = {
       ...meal,
       id: require('crypto').randomUUID(),
       loggedAt: new Date().toISOString()
     }
-    logs[date].meals.push(newMeal)
-    store.set('dailyLogs', logs)
+    store.set(`dailyLogs.${date}`, { meals: [...existing, newMeal] })
 
     // update streak
     const streaks = store.get('streaks')
@@ -94,21 +92,18 @@ function registerStoreHandlers() {
   })
 
   ipcMain.handle('store:delete-meal', (_, { date, mealId }) => {
-    const logs = store.get('dailyLogs')
-    if (logs[date]) {
-      logs[date].meals = logs[date].meals.filter(m => m.id !== mealId)
-      store.set('dailyLogs', logs)
-    }
+    const meals = store.get(`dailyLogs.${date}.meals`) || []
+    store.set(`dailyLogs.${date}`, { meals: meals.filter(m => m.id !== mealId) })
     return { success: true }
   })
 
   ipcMain.handle('store:get-weight-log', () => store.get('weightLog'))
 
   ipcMain.handle('store:add-weight', (_, { date, weight }) => {
-    const log = store.get('weightLog')
+    const log = [...(store.get('weightLog') || [])]
     const existing = log.findIndex(e => e.date === date)
     if (existing >= 0) {
-      log[existing].weight = weight
+      log[existing] = { date, weight }
     } else {
       log.push({ date, weight })
       log.sort((a, b) => a.date.localeCompare(b.date))
@@ -125,25 +120,40 @@ function registerStoreHandlers() {
   })
 
   ipcMain.handle('store:add-activity', (_, { date, activity }) => {
-    const logs = store.get('activityLogs')
-    if (!logs[date]) logs[date] = { activities: [] }
+    const existing = store.get(`activityLogs.${date}.activities`) || []
     const newActivity = {
       ...activity,
       id: require('crypto').randomUUID(),
       loggedAt: new Date().toISOString()
     }
-    logs[date].activities.push(newActivity)
-    store.set('activityLogs', logs)
+    store.set(`activityLogs.${date}`, { activities: [...existing, newActivity] })
     return { success: true, activity: newActivity }
   })
 
   ipcMain.handle('store:delete-activity', (_, { date, activityId }) => {
-    const logs = store.get('activityLogs')
-    if (logs[date]) {
-      logs[date].activities = logs[date].activities.filter(a => a.id !== activityId)
-      store.set('activityLogs', logs)
-    }
+    const activities = store.get(`activityLogs.${date}.activities`) || []
+    store.set(`activityLogs.${date}`, { activities: activities.filter(a => a.id !== activityId) })
     return { success: true }
+  })
+
+  ipcMain.handle('store:get-day-summary', (_, { date }) => {
+    const meals      = store.get(`dailyLogs.${date}.meals`)      || []
+    const activities = store.get(`activityLogs.${date}.activities`) || []
+    const weightLog  = store.get('weightLog') || []
+    const weightEntry = weightLog.find(e => e.date === date) || null
+    return { date, meals, activities, weight: weightEntry ? weightEntry.weight : null }
+  })
+
+  ipcMain.handle('store:get-logged-dates', () => {
+    const dailyLogs    = store.get('dailyLogs')    || {}
+    const activityLogs = store.get('activityLogs') || {}
+    const weightLog    = store.get('weightLog')    || []
+    const dates = new Set([
+      ...Object.keys(dailyLogs).filter(d => dailyLogs[d].meals?.length > 0),
+      ...Object.keys(activityLogs).filter(d => activityLogs[d].activities?.length > 0),
+      ...weightLog.map(e => e.date)
+    ])
+    return [...dates]
   })
 
   ipcMain.handle('app:get-initial-state', () => {

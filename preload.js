@@ -14,7 +14,9 @@ contextBridge.exposeInMainWorld('api', {
     getStreaks: () => ipcRenderer.invoke('store:get-streaks'),
     getActivityLog: (date) => ipcRenderer.invoke('store:get-activity-log', { date }),
     addActivity: (date, activity) => ipcRenderer.invoke('store:add-activity', { date, activity }),
-    deleteActivity: (date, activityId) => ipcRenderer.invoke('store:delete-activity', { date, activityId })
+    deleteActivity: (date, activityId) => ipcRenderer.invoke('store:delete-activity', { date, activityId }),
+    getDaySummary: (date) => ipcRenderer.invoke('store:get-day-summary', { date }),
+    getLoggedDates: () => ipcRenderer.invoke('store:get-logged-dates')
   },
   ai: {
     parseFood: (description) => ipcRenderer.invoke('ai:parse-food', { description }),
