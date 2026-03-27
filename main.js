@@ -1,5 +1,6 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
+const fs   = require('fs')
 
 let Store
 let store
@@ -18,6 +19,7 @@ async function initStore() {
       sleepLogs: {},
       moodLogs: {},
       weightLog: [],
+      progressPhotos: [],
       streaks: { current: 0, longest: 0, lastLoggedDate: null }
     }
   })
@@ -208,6 +210,44 @@ function registerStoreHandlers() {
       todayKey: getTodayKey(),
       streaks: store.get('streaks')
     }
+  })
+
+  // ── Progress Photos ─────────────────────────────────────────────────
+  ipcMain.handle('photos:open-dialog', async () => {
+    const result = await dialog.showOpenDialog(mainWindow, {
+      properties: ['openFile'],
+      filters: [{ name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'webp', 'heic'] }]
+    })
+    return result.canceled ? null : result.filePaths[0]
+  })
+
+  ipcMain.handle('photos:save-photo', async (_, { sourcePath, date }) => {
+    const photosDir = path.join(app.getPath('userData'), 'progress-photos')
+    if (!fs.existsSync(photosDir)) fs.mkdirSync(photosDir, { recursive: true })
+    const ext  = path.extname(sourcePath)
+    const id   = require('crypto').randomUUID()
+    const dest = path.join(photosDir, `${date}-${id}${ext}`)
+    fs.copyFileSync(sourcePath, dest)
+    const photos = store.get('progressPhotos') || []
+    const entry  = { id, date, path: dest, savedAt: new Date().toISOString() }
+    photos.push(entry)
+    photos.sort((a, b) => a.date.localeCompare(b.date))
+    store.set('progressPhotos', photos)
+    return { success: true, photo: entry }
+  })
+
+  ipcMain.handle('photos:get-photos', () => {
+    return (store.get('progressPhotos') || []).filter(p => fs.existsSync(p.path))
+  })
+
+  ipcMain.handle('photos:delete-photo', (_, { id }) => {
+    const photos = store.get('progressPhotos') || []
+    const photo  = photos.find(p => p.id === id)
+    if (photo && fs.existsSync(photo.path)) {
+      try { fs.unlinkSync(photo.path) } catch (_) {}
+    }
+    store.set('progressPhotos', photos.filter(p => p.id !== id))
+    return { success: true }
   })
 
   ipcMain.handle('store:get-calorie-history', (_, { startDate, endDate }) => {

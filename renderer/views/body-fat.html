@@ -1,77 +1,283 @@
 <div class="view-header">
-  <h1>Body Fat Estimator</h1>
-  <p>Navy Method — measure neck and waist circumference</p>
+  <h1>Body Fat</h1>
+  <p>Estimate, track, and document your body composition</p>
 </div>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-  <!-- Measurement Input -->
-  <div class="section">
+<!-- Tab Nav -->
+<div class="tab-nav section">
+  <div class="tab-item active" data-tab="measurements">Measurements</div>
+  <div class="tab-item" data-tab="visual">Visual Estimate</div>
+  <div class="tab-item" data-tab="photos">Progress Photos</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     TAB: MEASUREMENTS
+     ══════════════════════════════════════════════════ -->
+<div class="tab-panel active" id="bf-tab-measurements">
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <!-- Inputs -->
+    <div>
+      <div class="card section">
+        <div class="card-title" style="margin-bottom: 16px;">Circumference Measurements</div>
+
+        <div class="input-group">
+          <label class="input-label">Neck</label>
+          <div class="input-with-unit">
+            <input class="input" id="bf-neck" type="number" placeholder="15.5" min="8" max="30" step="0.1">
+            <span class="input-unit-label">in</span>
+          </div>
+          <span class="input-hint">Below the larynx</span>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Waist</label>
+          <div class="input-with-unit">
+            <input class="input" id="bf-waist" type="number" placeholder="34" min="20" max="80" step="0.1">
+            <span class="input-unit-label">in</span>
+          </div>
+          <span class="input-hint">At navel level</span>
+        </div>
+
+        <div class="input-row">
+          <div class="input-group">
+            <label class="input-label">Height</label>
+            <div class="input-with-unit">
+              <input class="input" id="bf-height" type="number" placeholder="69" min="48" max="96" step="0.1">
+              <span class="input-unit-label">in</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Weight</label>
+            <div class="input-with-unit">
+              <input class="input" id="bf-weight" type="number" placeholder="180" min="50" max="600" step="0.1">
+              <span class="input-unit-label">lbs</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Age</label>
+          <div class="input-with-unit">
+            <input class="input" id="bf-age" type="number" placeholder="28" min="16" max="80">
+            <span class="input-unit-label">yrs</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 8px;">
+          <button class="btn btn-primary" id="bf-calc-btn">Calculate</button>
+          <button class="btn btn-secondary" id="bf-save-btn" style="display:none;">Save to Profile</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div>
+      <div class="card section" id="bf-result-card">
+        <div class="card-title" style="margin-bottom: 16px;">Results</div>
+        <div id="bf-result">
+          <div class="empty-state">
+            <div class="empty-icon">&#x1F4CF;</div>
+            <p>Enter measurements and tap Calculate</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Bar full width -->
+  <div class="section" id="bf-progress-section" style="display:none;">
     <div class="card">
-      <h3 style="margin-bottom: 20px;">Measurements</h3>
-
-      <div class="input-group">
-        <label class="input-label">Neck Circumference</label>
-        <div class="input-with-unit">
-          <input class="input" id="bf-neck" type="number" placeholder="15.5" min="8" max="30" step="0.1">
-          <span class="input-unit-label">inches</span>
-        </div>
-        <span class="input-hint">Measure below the larynx</span>
+      <div class="card-title" style="margin-bottom: 16px;">Progress to Goal</div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">
+        <span>30% BF</span>
+        <span id="bf-goal-label"></span>
       </div>
-
-      <div class="input-group">
-        <label class="input-label">Waist Circumference</label>
-        <div class="input-with-unit">
-          <input class="input" id="bf-waist" type="number" placeholder="34" min="20" max="80" step="0.1">
-          <span class="input-unit-label">inches</span>
-        </div>
-        <span class="input-hint">Measure at navel level</span>
+      <div class="bf-progress-track">
+        <div class="bf-progress-fill" id="bf-progress-fill" style="width: 0%"></div>
+        <div class="bf-goal-marker" id="bf-goal-marker"></div>
       </div>
-
-      <div class="input-group">
-        <label class="input-label">Height</label>
-        <div class="input-with-unit">
-          <input class="input" id="bf-height" type="number" placeholder="69" min="48" max="96" step="0.1">
-          <span class="input-unit-label">inches</span>
-        </div>
+      <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">
+        <span>Obese</span><span>Lean</span>
       </div>
-
-      <div style="display: flex; gap: 10px; margin-top: 8px;">
-        <button class="btn btn-primary" id="bf-calc-btn">Calculate</button>
-        <button class="btn btn-secondary" id="bf-save-btn" style="display:none;">Save Measurement</button>
-      </div>
+      <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;" id="bf-stats"></div>
     </div>
   </div>
 
-  <!-- Result -->
-  <div class="section">
-    <div class="card" id="bf-result-card">
-      <h3 style="margin-bottom: 20px; color: var(--text-muted);">Results</h3>
-      <div id="bf-result">
-        <div class="empty-state">
-          <div class="empty-icon">&#x1F4CF;</div>
-          <p>Enter measurements and tap Calculate</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+</div><!-- end measurements tab -->
 
-<!-- Progress Bar full width -->
-<div class="section" id="bf-progress-section" style="display:none;">
-  <div class="card">
-    <div class="card-title" style="margin-bottom: 20px;">Progress to Goal</div>
-    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px;">
-      <span>30% BF</span>
-      <span id="bf-goal-label"></span>
-    </div>
-    <div class="bf-progress-track">
-      <div class="bf-progress-fill" id="bf-progress-fill" style="width: 0%"></div>
-      <div class="bf-goal-marker" id="bf-goal-marker"></div>
-    </div>
-    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">
-      <span>Obese</span>
-      <span>Lean</span>
-    </div>
-    <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;" id="bf-stats"></div>
+
+<!-- ══════════════════════════════════════════════════
+     TAB: VISUAL ESTIMATE
+     ══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="bf-tab-visual">
+
+  <div style="margin-bottom: 16px; color: var(--text-secondary); font-size: 0.875rem;">
+    Pick the card that most closely matches your current appearance. This is fast, surprisingly accurate, and improves with practice.
   </div>
-</div>
+
+  <div class="visual-bf-grid" id="visual-bf-grid">
+
+    <div class="vbf-card" data-bf="5">
+      <div class="vbf-pct">4–6%</div>
+      <div class="vbf-badge" style="background: rgba(104,211,145,0.15); color: var(--accent-green);">Competition</div>
+      <ul class="vbf-traits">
+        <li>All muscle striations visible</li>
+        <li>Veins across abs &amp; chest</li>
+        <li>Flat, almost hollow look</li>
+        <li>Difficult to maintain</li>
+      </ul>
+    </div>
+
+    <div class="vbf-card" data-bf="7">
+      <div class="vbf-pct">6–8%</div>
+      <div class="vbf-badge" style="background: rgba(104,211,145,0.12); color: var(--accent-green);">Shredded</div>
+      <ul class="vbf-traits">
+        <li>Full 6-pack clearly visible</li>
+        <li>Major vascularity everywhere</li>
+        <li>Visible separation in all groups</li>
+        <li>Peak fitness appearance</li>
+      </ul>
+    </div>
+
+    <div class="vbf-card" data-bf="9">
+      <div class="vbf-pct">8–10%</div>
+      <div class="vbf-badge" style="background: rgba(104,211,145,0.1); color: var(--accent-green);">Very Lean</div>
+      <ul class="vbf-traits">
+        <li>Clear 6-pack at rest</li>
+        <li>Arm veins prominent</li>
+        <li>Muscle separation throughout</li>
+        <li>Target for most athletes</li>
+      </ul>
+    </div>
+
+    <div class="vbf-card" data-bf="11">
+      <div class="vbf-pct">10–12%</div>
+      <div class="vbf-badge" style="background: rgba(104,211,145,0.08); color: var(--accent-green);">Lean</div>
+      <ul class="vbf-traits">
+        <li>Defined abs, visible at rest</li>
+        <li>Some vascularity in arms</li>
+        <li>Clear muscle outline</li>
+        <li>Angular, lean face</li>
+      </ul>
+    </div>
+
+    <div class="vbf-card" data-bf="13">
+      <div class="vbf-pct">12–14%</div>
+      <div class="vbf-badge" style="background: rgba(251,146,60,0.1); color: var(--accent-orange);">Athletic</div>
+      <ul class="vbf-traits">
+        <li>Visible abs, some softness</li>
+        <li>Fit, healthy appearance</li>
+        <li>Face looks lean</li>
+        <li>Most athletes off-season</li>
+      </ul>
+    </div>
+
+    <div class="vbf-card" data-bf="15">
+      <div class="vbf-pct">14–16%</div>
+      <div class="vbf-badge" style="background: rgba(251,146,60,0.08); color: var(--accent-orange);">Fitness</div>
+      <ul class="vbf-traits">
+        <li>Faint ab definition when flexed</li>
+        <li>Toned but not shredded</li>
+        <li>Slight softness around midsection</li>
+        <li>Common active lifestyle range</li>
+      </ul>
+    </div>
+
+    <div class="vbf-card" data-bf="17">
+      <div class="vbf-pct">16–18%</div>
+      <div class="vbf-badge" style="background: rgba(251,146,60,0.06); color: var(--accent-orange);">Average</div>
+      <ul class="vbf-traits">
+        <li>Little to no ab definition</li>
+        <li>Slightly rounded midsection</li>
+        <li>Face starting to look fuller</li>
+        <li>Most common male range</li>
+      </ul>
+    </div>
+
+    <div class="vbf-card" data-bf="19">
+      <div class="vbf-pct">18–20%</div>
+      <div class="vbf-badge" style="background: rgba(252,129,129,0.1); color: var(--accent-red);">Soft</div>
+      <ul class="vbf-traits">
+        <li>No visible abs</li>
+        <li>Noticeable softness at midsection</li>
+        <li>Fat visible on face &amp; sides</li>
+        <li>Clothes start to feel snug</li>
+      </ul>
+    </div>
+
+    <div class="vbf-card" data-bf="22">
+      <div class="vbf-pct">20–25%</div>
+      <div class="vbf-badge" style="background: rgba(252,129,129,0.12); color: var(--accent-red);">Heavy</div>
+      <ul class="vbf-traits">
+        <li>Rounded midsection and sides</li>
+        <li>Love handles visible</li>
+        <li>Fuller face and neck</li>
+        <li>No muscle definition</li>
+      </ul>
+    </div>
+
+    <div class="vbf-card" data-bf="27">
+      <div class="vbf-pct">25%+</div>
+      <div class="vbf-badge" style="background: rgba(252,129,129,0.15); color: var(--accent-red);">High BF</div>
+      <ul class="vbf-traits">
+        <li>Significant fat deposits</li>
+        <li>Pronounced midsection</li>
+        <li>No visible muscle structure</li>
+        <li>Health risk zone</li>
+      </ul>
+    </div>
+
+  </div><!-- end visual grid -->
+
+  <div id="visual-selection" style="display:none; margin-top: 20px;">
+    <div class="card" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px;">
+      <div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2px;">Selected estimate</div>
+        <div style="font-size: 1.8rem; font-weight: 900; color: var(--accent-blue);" id="visual-selected-val">—</div>
+      </div>
+      <button class="btn btn-primary" id="visual-save-btn">Save to Profile</button>
+    </div>
+  </div>
+
+</div><!-- end visual tab -->
+
+
+<!-- ══════════════════════════════════════════════════
+     TAB: PROGRESS PHOTOS
+     ══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="bf-tab-photos">
+
+  <!-- Upload controls -->
+  <div class="card section" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px;">
+    <div>
+      <div style="font-weight: 700; margin-bottom: 2px;">Add Progress Photo</div>
+      <div style="font-size: 0.8rem; color: var(--text-muted);">Stored locally on your machine — never uploaded anywhere.</div>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <input class="input" id="photo-date" type="date" style="width: 150px;">
+      <button class="btn btn-primary" id="photo-upload-btn">+ Add Photo</button>
+    </div>
+  </div>
+
+  <!-- AI stub -->
+  <div class="card section" style="border-color: var(--accent-blue); padding: 14px 18px; display: flex; gap: 14px; align-items: center;">
+    <div style="font-size: 1.4rem;">&#x1F916;</div>
+    <div style="flex: 1;">
+      <div style="font-weight: 700; font-size: 0.9rem;">AI Photo Analysis</div>
+      <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">Compare photos over time and estimate body fat changes from progress photos. Coming soon.</div>
+    </div>
+    <button class="btn btn-secondary btn-sm" disabled>Coming Soon</button>
+  </div>
+
+  <!-- Photo grid -->
+  <div id="photo-grid-empty" style="display:none;">
+    <div class="empty-state">
+      <div class="empty-icon">&#x1F4F7;</div>
+      <p>No progress photos yet. Add your first one!</p>
+    </div>
+  </div>
+
+  <div id="photo-grid" class="photo-grid"></div>
+
+</div><!-- end photos tab -->

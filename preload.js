@@ -26,6 +26,12 @@ contextBridge.exposeInMainWorld('api', {
     saveMood: (date, entry) => ipcRenderer.invoke('store:save-mood', { date, entry }),
     getCalorieHistory: (startDate, endDate) => ipcRenderer.invoke('store:get-calorie-history', { startDate, endDate })
   },
+  photos: {
+    openDialog:   ()           => ipcRenderer.invoke('photos:open-dialog'),
+    savePhoto:    (sourcePath, date) => ipcRenderer.invoke('photos:save-photo', { sourcePath, date }),
+    getPhotos:    ()           => ipcRenderer.invoke('photos:get-photos'),
+    deletePhoto:  (id)         => ipcRenderer.invoke('photos:delete-photo', { id })
+  },
   ai: {
     parseFood: (description) => ipcRenderer.invoke('ai:parse-food', { description }),
     suggestMeals: (remaining) => ipcRenderer.invoke('ai:suggest-meals', { remaining }),
