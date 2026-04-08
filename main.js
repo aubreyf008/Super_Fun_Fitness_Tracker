@@ -293,7 +293,7 @@ Keep suggestions practical and high-protein. User is cutting to ~12% body fat.`
 
       const tryParse = async (userContent) => {
         const msg = await client.messages.create({
-          model: 'claude-haiku-4-5-20251001',
+          model: 'claude-sonnet-4-6',
           max_tokens: 300,
           system: FOOD_PARSE_SYSTEM,
           messages: [{ role: 'user', content: userContent }]
@@ -323,7 +323,7 @@ Keep suggestions practical and high-protein. User is cutting to ~12% body fat.`
       const client = new Anthropic({ apiKey })
 
       const msg = await client.messages.create({
-        model: 'claude-haiku-4-5-20251001',
+        model: 'claude-sonnet-4-6',
         max_tokens: 600,
         system: SUGGEST_SYSTEM,
         messages: [{ role: 'user', content: SUGGEST_USER(remaining) }]
@@ -355,7 +355,7 @@ Activity: ${desc}`
 
       const tryParse = async (userContent) => {
         const msg = await client.messages.create({
-          model: 'claude-haiku-4-5-20251001',
+          model: 'claude-sonnet-4-6',
           max_tokens: 200,
           system: ACTIVITY_SYSTEM,
           messages: [{ role: 'user', content: userContent }]
@@ -380,7 +380,7 @@ Activity: ${desc}`
       const { default: Anthropic } = await import('@anthropic-ai/sdk')
       const client = new Anthropic({ apiKey: key })
       await client.messages.create({
-        model: 'claude-haiku-4-5-20251001',
+        model: 'claude-sonnet-4-6',
         max_tokens: 50,
         messages: [{ role: 'user', content: 'Say "ok"' }]
       })
